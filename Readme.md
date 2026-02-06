@@ -296,22 +296,14 @@ Copy this helper and then fill in the TODOs:
 
 ```python
 def get_first_rank_player(soup: BeautifulSoup):
-    """Return stats dict for the top-ranked player (Rank = 1)."""
+    name_container = soup.select_one(".player-name-trw")
+    stat_table = soup.select_one(".ranking-top-table table")
+    if not name_container or not stat_table:
+        print("Top ranking player not found!")
+        return None
+    name = " ".join(name_container.stripped_strings)
 
-    # TODO: select the name container for the top player
-    # name_container = soup.select_one(".player-name-trw")
-
-    # TODO: select the small stats table for the top player
-    # stat_table = soup.select_one(".ranking-top-table table")
-
-    # TODO: handle the case when either element is missing (print and return None)
-    # if not name_container or not stat_table:
-    #     ...
-
-    # TODO: build the player's name from the text inside name_container
-    # name = " ".join(name_container.stripped_strings)
-
-    stats = {"Rank": 1, "Name": name}
+    stats = { "Rank": 1, "Name": name }
     for td in stat_table.select("td"):
         label = td.find("span").get_text(strip=True)
         value = td.find("p").get_text(strip=True)
