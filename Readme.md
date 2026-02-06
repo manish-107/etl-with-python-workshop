@@ -324,30 +324,31 @@ Copy this boilerplate and fill in the TODO parts:
 ```python
 from IPython.display import display
 
-# Extract records and column names from HTML for each job
+# Extract records and column names from HTML
+# Iterate over jobs to correctly get 'basename' and 'discipline'
 for url, basename, discipline in jobs:
-    # TODO: get the HTML string you stored earlier for this basename (from html_store)
+  # Get the HTML that you stored before
+  html = html_store[basename]
 
-    # TODO: parse the HTML into a list of records for this discipline
+  # Calling extract_data_from_html will implicitly use the global 'columns' dict for parsing.
+  records = extract_data_from_html(html, discipline) # No need to capture 'columns' returned by func if it's the global one
 
-    # If no records, print a message and skip this job
-    # if not records:
-    #     print(f"No records found for {basename}!")
-    #     continue
+  if not records:
+    print(f"No records found for {basename}!")
+    continue
 
-    # TODO: build a DataFrame using the correct columns list for this discipline
+  # Use the global 'columns' dictionary with the current 'discipline' to get the list of column names
+  df = pd.DataFrame.from_records(records, columns=columns[discipline])
 
-    # If you wish to see the file
-    print(f"--------{basename}----------")
-    display(df)
-    print("\n\n\n")
+  # If you wish to see the file
+  print(f"--------{basename}----------")
+  display(df,)
+  print("\n\n\n")
 
-    # TODO: build the CSV path for this basename inside OUT_DIR
-    # (example: use os.path.join with OUT_DIR and basename)
-
-    # TODO: save the DataFrame to CSV (without the index column)
-
-    # TODO: append the saved CSV path into saved_paths for later steps
+  # Save data to CSV file
+  path = os.path.join(OUT_DIR, f"{basename}.csv")
+  df.to_csv(path, index=False)
+  saved_paths.append(path)
 ```
 
 ---
