@@ -179,9 +179,9 @@ Copy this block and then fill in the TODO parts yourself:
 
 ```python
 def normalize_label(text: str) -> str:
-    """Normalize cricket statistics labels to a consistent format."""
-    # TODO: clean up the raw label text (strip, lower, remove dots, handle smart quotes)
-    # low = ...
+    """Normalize cricket statistics labels to consistent format."""
+    # Clean up text: remove smart quotes, periods, and normalize case
+    low = text.replace("\u2019", "'").replace(".", "").strip().lower()
 
     # Mapping dictionary to standardize label names
     mapping = {
@@ -209,18 +209,19 @@ def normalize_label(text: str) -> str:
         "4w": "Four_w",
         "5w": "Five_w",
     }
-
-    # TODO: return the standardized label using mapping and the cleaned string
-    # return ...
+    return mapping.get(low, text.strip())
 
 
 def coerce_value(text: str):
     """Convert string values to appropriate data types (int, float, or string)."""
-    # TODO: implement try/except that:
-    #   - if "." in text, returns float(text)
-    #   - otherwise returns int(text)
-    #   - on failure, returns text.strip()
-    ...
+    try:
+        if "." in text:  # Contains decimal point
+            return float(text)
+        return int(text)  # Integer value
+    except Exception:
+        return text.strip()  # Return original string if conversion fails
+
+print("Initialized helper functions")
 ```
 
 ---
