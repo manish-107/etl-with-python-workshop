@@ -145,33 +145,28 @@ saved_paths: List[str] = []
 Copy this block and fill in the logic under each comment:
 
 ```python
-# Create output directory if it doesn't exist (use OUT_DIR as the folder name)
+os.makedirs(OUT_DIR, exist_ok=True)
 
+# Store the HTML for each API
+html_store: dict[str, str] = {}
 
-# Create an empty dictionary html_store to hold raw HTML
-#   - key: basename (str)
-#   - value: HTML string (str)
+# Process each API endpoint
+for url, basename, kind in jobs:
+    # Make HTTP request to BCCI API
+    resp = requests.get(url, timeout=30)
+    resp.raise_for_status()  # Raise exception for HTTP errors
 
+    # Parse JSON response from API
+    payload = resp.json()  # Returns a JSON response with HTML content
+    html = payload.get("html", None)
+    if not html:
+        print(f"The HTML data for {basename} does not exists!")
+        continue  # Skip if no HTML data in response
 
-# Loop over all (url, basename, kind) items in jobs
+    # Store the HTML for extraction
+    html_store[basename] = html
 
-
-# For each job: make HTTP GET request to the BCCI API (with timeout and raise_for_status)
-
-
-# Parse JSON response (resp.json()) and read the "html" field
-
-
-# If the "html" field is missing or empty, print a message and skip this job (continue)
-
-
-# Otherwise, store the HTML in html_store using basename as the key
-
-
-# Print a short success message for each basename you processed
-
-# See the HTML if you wish (⚠️ The contents are too long!)
-    # print(html)
+    print(f"Got raw data for {basename}")
 ```
 
 ---
